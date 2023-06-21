@@ -7,7 +7,7 @@ stages:
 test_artifact:
     stage: infrastructure
     script:
-        - echo "it works" >> /builds/Janortop5/capstone-microservices-demo-watchn/config
+        - cp $CONFIG >> /builds/Janortop5/capstone-microservices-demo-watchn/config
     artifacts:
       paths:
       - /builds/Janortop5/capstone-microservices-demo-watchn/config
