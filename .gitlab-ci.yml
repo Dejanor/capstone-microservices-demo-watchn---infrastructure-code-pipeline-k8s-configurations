@@ -19,3 +19,11 @@ did_it_workk:
     script:
         - cat /builds/Janortop5/capstone-microservices-demo-watchn/config
 
+deploy_to_dev:
+    stage: deploy-to-dev
+    image:
+        name: bitnami/kubectl:latest
+        entrypoint: ['']
+    script:
+        - export KUBECONFIG=/builds/Janortop5/capstone-microservices-demo-watchn/config
+        - kubectl get nodes
