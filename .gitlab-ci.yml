@@ -7,24 +7,7 @@ stages:
 test_artifact:
     stage: infrastructure
     script:
-        - echo "apiVersion: v1
-clusters:
-- cluster:
-    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURKekNDQWcrZ0F3SUJBZ0lDQm5Vd0RRWUpLb1pJaHZjTkFRRUxCUUF3TXpFVk1CTUdBMVVFQ2hNTVJHbG4KYVhSaGJFOWpaV0Z1TVJvd0dBWURWUVFERXhGck9ITmhZWE1nUTJ4MWMzUmxjaUJEUVRBZUZ3MHlNekEyTWpFdwpOekkxTWpSYUZ3MDBNekEyTWpFd056STFNalJhTURNeEZUQVRCZ05WQkFvVERFUnBaMmwwWVd4UFkyVmhiakVhCk1CZ0dBMVVFQXhNUmF6aHpZV0Z6SUVOc2RYTjBaWElnUTBFd2dnRWlNQTBHQ1NxR1NJYjNEUUVCQVFVQUE0SUIKRHdBd2dnRUtBb0lCQVFEZCtjamNIaDlHeEtwaEZuQy9qdjJNdFdBSFRPRFhleDV4b1drUFFHQ3lIb2lSRC93dgpDbHY1ZmpvUVV1MTBHbXA0TmVWSWlPNzhCbXJDUWp0SzdLUm5MZmFDdkNhTEtHYVNOMFl2RVI2eEk5aWVXcWV0CmdqM1FSa1NzL2tweTlmNFN0aUdlY2VNRXR1YVc0NnoyWmN1MnBPQ0p1ZWpSaXZRZUtrMjF3dkxmbWN0VDQ2ZlYKejAzNnNpR1pPWng1aHR0NGxnVmdtMzREMVdhY0l2dllVa01xenlFdUFpSUZ3c05FWTJQcGJ2UWVBcGZtd1NxMgo2YUNtSjdEMXhxZ2VuaXNyeEJSSTJRb3pCUHJwL01HNGNGY0QzaElXanBDbjdJbGRDVEtKazNnMVNmcG9vSE9QCklxcytyQkhWVnJxK2pNTGFKcnovTDdKMmRWeWNya2JJM2dJTEFnTUJBQUdqUlRCRE1BNEdBMVVkRHdFQi93UUUKQXdJQmhqQVNCZ05WSFJNQkFmOEVDREFHQVFIL0FnRUFNQjBHQTFVZERnUVdCQlNQQURtOSt4TFNNajJBRVdVRQpXakpESUJTN3NqQU5CZ2txaGtpRzl3MEJBUXNGQUFPQ0FRRUFzZ3VUSjRsMnN6WEJoVnVSSEZ4Yk1mZFVpK25KCkE1SmdzVmlDOXhlY0pIZTRDS082alFyQ0lNSkhnK0lWWlRVNVd5eWxGbHIvZHBKdnpIUzExVzBJUlByd09wNGsKMTZVRUcvaDFsaDBGOU1kRDh5RXo1U2xLZ1U3MFlMQk1ja2tBdVRyV0RzZXlpTjBRZGRZTnFqbll0R0VqaW5qcwpQOE9oNTB5WFV4QVF1N0phZFBCUHk5NFRJRTFzVkE0MVVMZldFeTk3Ri9zRlVObTdVSGlZdWw4RFRhb25sdzhtCml0N2VqWVRyaitRQWIxTy9xYS9QMTFIbUpVQTVVeDBteVVDeXBoa2JaNWhFdXRhZ1Jsd2xnamZOWVp0bGdKRTYKRVFzVGNCVmxQUElVNk02MHhFdExKeXpmaEc1TTEzSHFZZ0ZtM2pZNEJhakNtSlZTRTluTkZ0Rk9WZz09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
-    server: https://9bda47a8-daea-4156-810f-bf08547509d4.k8s.ondigitalocean.com
-  name: do-fra1-capstone-connect-k8
-contexts:
-- context:
-    cluster: do-fra1-capstone-connect-k8
-    user: do-fra1-capstone-connect-k8-admin
-  name: do-fra1-capstone-connect-k8
-current-context: do-fra1-capstone-connect-k8
-kind: Config
-preferences: {}
-users:
-- name: do-fra1-capstone-connect-k8-admin
-  user:
-    token: dop_v1_943fe73a89126f4b203306824aaf31a47d99294be920e0d9e1f2d82d50a61cb6" >> /builds/Janortop5/capstone-microservices-demo-watchn/config
+        - echo "it works" >> /builds/Janortop5/capstone-microservices-demo-watchn/config
     artifacts:
       paths:
       - /builds/Janortop5/capstone-microservices-demo-watchn/config
