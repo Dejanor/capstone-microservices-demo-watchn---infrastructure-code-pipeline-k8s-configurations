@@ -29,6 +29,7 @@ deploy_to_dev:
         - helm
         - wget https://github.com/helmfile/helmfile/releases/download/v0.154.0/helmfile_0.154.0_linux_amd64.tar.gz
         - tar xvzf helmfile_0.154.0_linux_amd64.tar.gz
+        - ./helmfile
         - helmfile
 
     # script:
