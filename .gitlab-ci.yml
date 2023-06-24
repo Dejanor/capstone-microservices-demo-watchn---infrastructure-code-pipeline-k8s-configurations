@@ -17,15 +17,15 @@ infrastructure:
         - terraform apply --auto-approve
         - terraform output kubeconfigdev > configdev
         - sed '1d;$d' configdev| cp /dev/stdin /builds/Janortop5/capstone-microservices-demo-watchn/terraform/configdev
-        - terraform output kubeconfigprod > configprod
-        - sed '1d;$d' configprod| cp /dev/stdin /builds/Janortop5/capstone-microservices-demo-watchn/terraform/configprod
-        - cp configprod > configprod
+        - cd /builds/Janortop5/capstone-microservices-demo-watchn/terraform/
+        - terraform output kubeconfigprod > /builds/Janortop5/capstone-microservices-demo-watchn/terraform/kubeconfigprod
+        - sed '1d;$d' /builds/Janortop5/capstone-microservices-demo-watchn/terraform/kubeconfigprod| cp /dev/stdin /builds/Janortop5/capstone-microservices-demo-watchn/terraform/configprod
         - cat /builds/Janortop5/capstone-microservices-demo-watchn/terraform/configdev
-        - cat /builds/Janortop5/capstone-microservices-demo-watchn/terraform/configdev
+        - cat /builds/Janortop5/capstone-microservices-demo-watchn/terraform/kubeconfigprod
     artifacts:
       paths:
       - /builds/Janortop5/capstone-microservices-demo-watchn/terraform/configdev
-      - /builds/Janortop5/capstone-microservices-demo-watchn/terraform/configprod
+      - /builds/Janortop5/capstone-microservices-demo-watchn/terraform/kubeconfigprod
       expire_in: 1 week
 
 # build_images:
