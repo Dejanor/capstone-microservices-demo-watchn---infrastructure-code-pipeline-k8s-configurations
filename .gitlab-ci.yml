@@ -25,11 +25,37 @@ infrastructure:
       - /builds/Janortop5/capstone-microservices-demo-watchn/terraform/configprod
       expire_in: 1 week
 
-did_it_workk:
+build_images:
     stage: build
-    image: ubuntu:22.10
+    image: docker:23.0.1-cli
+    services:
+        - docker:23.0.1-dind
+    variables:
+        DOCKER_TLS_CERTDIR: "/certs"
+    before_script:
+        - docker login -u $REGISTRY_USER -p $REGISTRY_PASS
     script:
-        - cat /builds/Janortop5/capstone-microservices-demo-watchn/config
+        - cd src/ui
+        - docker build -t janortop5/watchn-ui:latest --build-arg JAR_PATH=target/ui-0.0.1-SNAPSHOT.jar .
+        - /builds/Janortop5/capstone-microservices-demo-watchn/src/catalog
+        - docker build -t janortop5/watchn-catalog:latest .
+        - /builds/Janortop5/capstone-microservices-demo-watchn/src/cart
+        - docker build -t janortop5/watchn-carts:latest --build-arg JAR_PATH=target/carts-0.0.1-SNAPSHOT.jar .
+        - /builds/Janortop5/capstone-microservices-demo-watchn/src/orders
+        - docker build -t janortop5/watchn-orders:latest --build-arg JAR_PATH=target/orders-0.0.1-SNAPSHOT.jar .
+        - /builds/Janortop5/capstone-microservices-demo-watchn/src/checkout
+        - docker build -t janortop5/watchn-checkout:latest .
+        - /builds/Janortop5/capstone-microservices-demo-watchn/src/assets
+        - docker build -t janortop5/watchn-assets:latest .
+        - /builds/Janortop5/capstone-microservices-demo-watchn/images/activemq
+        - docker build -t janortop5/watchn-activemq:latest .
+        - docker push janortop5/watchn-ui:latest
+        - docker push janortop5/watchn-catalog:latest
+        - docker push janortop5/watchn-carts:latest
+        - docker push janortop5/watchn-orders:latest
+        - docker push janortop5/watchn-checkout:latest
+        - docker push janortop5/watchn-assets:latest
+        - docker push janortop5/watchn-activemq:lates
 
 deploy_to_dev:
     stage: deploy-to-dev
@@ -44,7 +70,23 @@ deploy_to_dev:
         - cp helmfile /usr/sbin
         - helmfile
         - helm plugin install https://github.com/databus23/helm-diff
+        - export KUBECONFIG=/builds/Janortop5/capstone-microservices-demo-watchn/terraform/configpdev
+        - kubectl get nodes
 
-    # script:
-    #     - export KUBECONFIG=/builds/Janortop5/capstone-microservices-demo-watchn/config
-    #     - kubectl get nodes
+deploy_to_production:
+    stage: deploy-to-prod
+    image:
+        name: dtzar/helm-kubectl:latest
+        entrypoint: ['']
+    script:
+        - kubectl
+        - helm
+        - wget https://github.com/helmfile/helmfile/releases/download/v0.154.0/helmfile_0.154.0_linux_amd64.tar.gz
+        - tar xvzf helmfile_0.154.0_linux_amd64.tar.gz
+        - cp helmfile /usr/sbin
+        - helmfile
+        - helm plugin install https://github.com/databus23/helm-diff
+        - export KUBECONFIG=/builds/Janortop5/capstone-microservices-demo-watchn/terraform/configprod
+        - kubectl get nodes
+
+
