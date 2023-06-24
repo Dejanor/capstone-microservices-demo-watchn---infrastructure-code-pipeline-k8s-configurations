@@ -4,13 +4,25 @@ stages:
     - "deploy-to-dev"
     - "deploy-to-prod"
 
-test_artifact:
+infrastructure:
     stage: infrastructure
+    image: zenika/terraform-aws-cli:release-6.0_terraform-0.15.5_awscli-1.27.60
+    before_script:
+        - echo AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+        - echo AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+        - echo AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
     script:
-        - cp $CONFIG /builds/Janortop5/capstone-microservices-demo-watchn/config
+        - cd terraform
+        - terraform init
+        - terraform apply --auto-approve
+        - terraform output kubeconfigdev > configdev
+        - terraform output kubeconfigprod > configprod
+        - sed '1d;$d' configdev| cp /dev/stdin configdev
+        - sed '1d;$d' configprod| cp /dev/stdin configprod
     artifacts:
       paths:
-      - /builds/Janortop5/capstone-microservices-demo-watchn/config
+      - /builds/Janortop5/capstone-microservices-demo-watchn/terraform/configpdev
+      - /builds/Janortop5/capstone-microservices-demo-watchn/terraform/configprod
       expire_in: 1 week
 
 did_it_workk:
