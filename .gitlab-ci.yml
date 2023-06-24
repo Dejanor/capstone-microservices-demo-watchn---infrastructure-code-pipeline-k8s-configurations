@@ -24,6 +24,10 @@ deploy_to_dev:
     image:
         name: bitnami/kubectl:latest
         entrypoint: ['']
-    script:
-        - export KUBECONFIG=/builds/Janortop5/capstone-microservices-demo-watchn/config
-        - kubectl get nodes
+    before_script:
+        - curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+        - chmod 700 get_helm.sh
+        - ./get_helm.sh
+    # script:
+    #     - export KUBECONFIG=/builds/Janortop5/capstone-microservices-demo-watchn/config
+    #     - kubectl get nodes
