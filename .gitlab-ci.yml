@@ -21,7 +21,7 @@ infrastructure:
         - sed '1d;$d' configprod| cp /dev/stdin configprod
     artifacts:
       paths:
-      - /builds/Janortop5/capstone-microservices-demo-watchn/terraform/configpdev
+      - /builds/Janortop5/capstone-microservices-demo-watchn/terraform/configdev
       - /builds/Janortop5/capstone-microservices-demo-watchn/terraform/configprod
       expire_in: 1 week
 
@@ -70,6 +70,7 @@ deploy_to_dev:
         - cp helmfile /usr/sbin
         - helmfile
         - helm plugin install https://github.com/databus23/helm-diff
+        - cat /builds/Janortop5/capstone-microservices-demo-watchn/terraform/configdev
         - export KUBECONFIG=/builds/Janortop5/capstone-microservices-demo-watchn/terraform/configdev
         - kubectl get nodes
 
