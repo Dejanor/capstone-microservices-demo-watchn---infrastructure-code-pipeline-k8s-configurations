@@ -22,13 +22,12 @@ did_it_workk:
 deploy_to_dev:
     stage: deploy-to-dev
     image:
-        name: bitnami/kubectl:latest
+        name: dtzar/helm-kubectl:latest
         entrypoint: ['']
     script:
-        - sudo apt install curl
-        - curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
-        - chmod 700 get_helm.sh
-        - ./get_helm.sh
+        - kubectl
+        - helm
+
     # script:
     #     - export KUBECONFIG=/builds/Janortop5/capstone-microservices-demo-watchn/config
     #     - kubectl get nodes
