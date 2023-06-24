@@ -31,6 +31,7 @@ deploy_to_dev:
         - tar xvzf helmfile_0.154.0_linux_amd64.tar.gz
         - cp helmfile /usr/sbin
         - helmfile
+        - helm plugin install https://github.com/databus23/helm-diff
 
     # script:
     #     - export KUBECONFIG=/builds/Janortop5/capstone-microservices-demo-watchn/config
