@@ -27,6 +27,7 @@ deploy_to_dev:
     script:
         - kubectl
         - helm
+        - helmfile
 
     # script:
     #     - export KUBECONFIG=/builds/Janortop5/capstone-microservices-demo-watchn/config
