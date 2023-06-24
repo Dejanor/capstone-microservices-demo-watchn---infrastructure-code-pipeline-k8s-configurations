@@ -63,7 +63,7 @@ deploy_to_dev:
         name: dtzar/helm-kubectl:latest
         entrypoint: ['']
     before_script:
-        - apk aws-iam-authenticator
+        - apk install aws-iam-authenticator
     script:
         - kubectl
         - helm
