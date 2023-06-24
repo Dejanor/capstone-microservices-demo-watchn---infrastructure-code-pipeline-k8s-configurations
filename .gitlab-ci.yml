@@ -7,10 +7,6 @@ stages:
 infrastructure:
     stage: infrastructure
     image: hashicorp/terraform:1.5
-    # before_script:
-    #     - echo AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
-    #     - echo AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
-    #     - echo AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
     script:
         - cd terraform
         - terraform init
