@@ -18,7 +18,7 @@ infrastructure:
         - terraform output kubeconfigdev > configdev
         - terraform output kubeconfigprod > configprod
         - sed '1d;$d' configdev| cp /dev/stdin /builds/Janortop5/capstone-microservices-demo-watchn/terraform/configdev
-        - sed '1d;$d' configprod| cp /dev/stdin /builds/Janortop5/capstone-microservices-demo-watchn/terraform/configdev
+        - sed '1d;$d' configprod| cp /dev/stdin /builds/Janortop5/capstone-microservices-demo-watchn/terraform/configprod
     artifacts:
       paths:
       - /builds/Janortop5/capstone-microservices-demo-watchn/terraform/configdev
@@ -76,7 +76,6 @@ deploy_to_dev:
         - cp helmfile /usr/sbin
         - helmfile
         - helm plugin install https://github.com/databus23/helm-diff
-        - cat /builds/Janortop5/capstone-microservices-demo-watchn/terraform/configdev
         - export KUBECONFIG=/builds/Janortop5/capstone-microservices-demo-watchn/terraform/configdev
         - kubectl get nodes
 
@@ -85,6 +84,12 @@ deploy_to_production:
     image:
         name: dtzar/helm-kubectl:latest
         entrypoint: ['']
+    before_script:
+        - curl -Lo aws-iam-authenticator https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/download/v0.5.9/aws-iam-authenticator_0.5.9_linux_amd64
+        - chmod +x ./aws-iam-authenticator
+        - mkdir -p $HOME/bin && cp ./aws-iam-authenticator $HOME/bin/aws-iam-authenticator && export PATH=$PATH:$HOME/bin
+        - echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc
+        - aws-iam-authenticator help
     script:
         - kubectl
         - helm
