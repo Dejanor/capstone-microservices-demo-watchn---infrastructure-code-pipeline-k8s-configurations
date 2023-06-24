@@ -16,9 +16,12 @@ infrastructure:
         - terraform init
         - terraform apply --auto-approve
         - terraform output kubeconfigdev > configdev
-        - terraform output kubeconfigprod > configprod
         - sed '1d;$d' configdev| cp /dev/stdin /builds/Janortop5/capstone-microservices-demo-watchn/terraform/configdev
+        - terraform output kubeconfigprod > configprod
         - sed '1d;$d' configprod| cp /dev/stdin /builds/Janortop5/capstone-microservices-demo-watchn/terraform/configprod
+        - cp configprod > configprod
+        - cat /builds/Janortop5/capstone-microservices-demo-watchn/terraform/configdev
+        - cat /builds/Janortop5/capstone-microservices-demo-watchn/terraform/configdev
     artifacts:
       paths:
       - /builds/Janortop5/capstone-microservices-demo-watchn/terraform/configdev
