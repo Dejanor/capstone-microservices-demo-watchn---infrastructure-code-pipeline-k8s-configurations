@@ -55,7 +55,7 @@ build_images:
         - docker push janortop5/watchn-orders:latest
         - docker push janortop5/watchn-checkout:latest
         - docker push janortop5/watchn-assets:latest
-        - docker push janortop5/watchn-activemq:lates
+        - docker push janortop5/watchn-activemq:latest
 
 deploy_to_dev:
     stage: deploy-to-dev
