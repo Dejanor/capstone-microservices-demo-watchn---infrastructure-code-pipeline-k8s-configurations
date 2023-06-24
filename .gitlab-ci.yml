@@ -37,17 +37,17 @@ build_images:
     script:
         - cd src/ui
         - docker build -t janortop5/watchn-ui:latest --build-arg JAR_PATH=target/ui-0.0.1-SNAPSHOT.jar .
-        - /builds/Janortop5/capstone-microservices-demo-watchn/src/catalog
+        - cd /builds/Janortop5/capstone-microservices-demo-watchn/src/catalog
         - docker build -t janortop5/watchn-catalog:latest .
-        - /builds/Janortop5/capstone-microservices-demo-watchn/src/cart
+        - cd /builds/Janortop5/capstone-microservices-demo-watchn/src/cart
         - docker build -t janortop5/watchn-carts:latest --build-arg JAR_PATH=target/carts-0.0.1-SNAPSHOT.jar .
-        - /builds/Janortop5/capstone-microservices-demo-watchn/src/orders
+        - cd /builds/Janortop5/capstone-microservices-demo-watchn/src/orders
         - docker build -t janortop5/watchn-orders:latest --build-arg JAR_PATH=target/orders-0.0.1-SNAPSHOT.jar .
-        - /builds/Janortop5/capstone-microservices-demo-watchn/src/checkout
+        - cd /builds/Janortop5/capstone-microservices-demo-watchn/src/checkout
         - docker build -t janortop5/watchn-checkout:latest .
-        - /builds/Janortop5/capstone-microservices-demo-watchn/src/assets
+        - cd /builds/Janortop5/capstone-microservices-demo-watchn/src/assets
         - docker build -t janortop5/watchn-assets:latest .
-        - /builds/Janortop5/capstone-microservices-demo-watchn/images/activemq
+        - cd /builds/Janortop5/capstone-microservices-demo-watchn/images/activemq
         - docker build -t janortop5/watchn-activemq:latest .
         - docker push janortop5/watchn-ui:latest
         - docker push janortop5/watchn-catalog:latest
