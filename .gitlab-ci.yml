@@ -18,11 +18,10 @@ infrastructure:
         - mkdir config
         - terraform output kubeconfigdev > config/configdev
         - terraform output kubeconfigprod > config/configprod
-        - cd config
-        - sed '1d;$d' configprod| cp configprod
-        - sed '1d;$d' configprod| cp configprod
-        - cat configdev
-        - cat configprod
+        - sed '1d;$d' config/configdev| cp /dev/stdin /builds/Janortop5/capstone-microservices-demo-watchn/terraform/config/configdev
+        - sed '1d;$d' config/configprod| cp /dev/stdin /builds/Janortop5/capstone-microservices-demo-watchn/terraform/config/configprod
+        - cat /builds/Janortop5/capstone-microservices-demo-watchn/terraform/config/configdev
+        - cat /builds/Janortop5/capstone-microservices-demo-watchn/terraform/config/configprod
     artifacts:
       paths:
       - /builds/Janortop5/capstone-microservices-demo-watchn/terraform/config/
