@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: watchn/watchn-catalog
+  repository: janortop5/watchn-catalog:latest
   pullPolicy: IfNotPresent
   tag: "build.1661651841"
 
