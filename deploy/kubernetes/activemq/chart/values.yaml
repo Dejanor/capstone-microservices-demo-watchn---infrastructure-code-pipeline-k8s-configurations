@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: watchn/activemq
+  repository: janortop5/watchn-activemq:latest 
   pullPolicy: IfNotPresent
   tag: "0.0.2"
 
