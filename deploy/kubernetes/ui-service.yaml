@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    meta.helm.sh/release-name: ui
+    meta.helm.sh/release-namespace: watchn
+  labels:
+    app.kubernetes.io/component: service
+    app.kubernetes.io/instance: ui
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: ui
+    helm.sh/chart: ui-0.0.1
+  name: ui
+  namespace: watchn
+spec:
+  ports:
+  - name: http
+    nodePort: 31290
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/component: service
+    app.kubernetes.io/instance: ui
+    app.kubernetes.io/name: ui
+  type: LoadBalancer
