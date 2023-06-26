@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: checkout-monitoring
+  namespace: watchn
+  labels:
+    release: prometheus 
+spec:
+  selector:
+    matchLabels:
+      name: checkout
+  endpoints:
+    - interval: 5s
+      path: /metrics
+      port: "8080"
+  namespaceSelector:
+    matchNames:
+      - "default"
+
