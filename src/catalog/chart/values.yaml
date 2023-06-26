@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: registry-1.docker.io/janortop5/watchn-catalog:latest
+  repository: registry-1.docker.io/janortop5/watchn-catalog
   pullPolicy: IfNotPresent
   tag: "0.0.1"
 
