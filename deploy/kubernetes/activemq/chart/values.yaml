@@ -5,9 +5,9 @@
 replicaCount: 1
 
 image:
-  repository: janortop5/watchn-activemq:latest 
+  repository: registry-1.docker.io/janortop5/watchn-activemq
   pullPolicy: IfNotPresent
-  tag: "0.0.2"
+  tag: "0.0.1"
 
 imagePullSecrets: []
 nameOverride: ""
