@@ -8,6 +8,8 @@ releases:
   namespace: "watchn"
   chart: ./activemq/chart
   wait: true
+  values:
+  - components.yaml.gotmpl  
 
 - name: "catalog"
   namespace: "watchn"
