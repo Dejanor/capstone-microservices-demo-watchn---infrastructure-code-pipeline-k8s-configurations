@@ -5,9 +5,9 @@
 replicaCount: 1
 
 image:
-  repository: janortop5/watchn-catalog:latest
+  repository: registry-1.docker.io/janortop5/watchn-catalog:latest
   pullPolicy: IfNotPresent
-  tag: "build.1661651841"
+  tag: "0.0.1"
 
 imagePullSecrets: []
 nameOverride: ""
