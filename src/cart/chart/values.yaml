@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: registry-1.docker.io/janortop5/watchn-carts:latest
+  repository: registry-1.docker.io/janortop5/watchn-carts
   pullPolicy: IfNotPresent
   tag: "0.0.1"
 
