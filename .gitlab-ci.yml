@@ -49,13 +49,13 @@ build_images:
         - docker build -t janortop5/watchn-assets:latest .
         - cd /builds/Janortop5/capstone-microservices-demo-watchn/images/activemq
         - docker build -t janortop5/watchn-activemq:latest .
-        - docker push janortop5/watchn-ui:latest
-        - docker push janortop5/watchn-catalog:latest
-        - docker push janortop5/watchn-carts:latest
-        - docker push janortop5/watchn-orders:latest
-        - docker push janortop5/watchn-checkout:latest
-        - docker push janortop5/watchn-assets:latest
-        - docker push janortop5/watchn-activemq:latest
+        - docker push janortop5/watchn-ui:0.0.1
+        - docker push janortop5/watchn-catalog:0.0.1
+        - docker push janortop5/watchn-carts:0.0.1
+        - docker push janortop5/watchn-orders:0.0.1
+        - docker push janortop5/watchn-checkout:0.0.1
+        - docker push janortop5/watchn-assets:0.0.1
+        - docker push janortop5/watchn-activemq:0.0.1
 
 deploy_to_dev:
     stage: deploy-to-dev
