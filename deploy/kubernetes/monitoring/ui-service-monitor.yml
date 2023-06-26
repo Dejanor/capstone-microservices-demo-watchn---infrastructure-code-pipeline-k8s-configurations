@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: ui-monitoring
+  namespace: watchn
+  labels:
+    release: prometheus 
+spec:
+  selector:
+    matchLabels:
+      name: ui
+  endpoints:
+    - interval: 5s
+      path: /actuator/prometheus
+      port: "8080"
+  namespaceSelector:
+    matchNames:
+      - "default"
+
