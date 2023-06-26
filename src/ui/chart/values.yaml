@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: registry-1.docker.io/janortop5/watchn-ui
+  repository: registry-2.docker.io/janortop5/watchn-ui
   pullPolicy: IfNotPresent
   tag: "latest"
 
