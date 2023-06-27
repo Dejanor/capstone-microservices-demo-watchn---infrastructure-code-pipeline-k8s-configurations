@@ -79,6 +79,8 @@ deploy_to_dev:
     script:
         - cd /builds/Janortop5/capstone-microservices-demo-watchn/deploy/kubernetes/
         - ./deploy.sh
+        - cd /builds/Janortop5/capstone-microservices-demo-watchn/deploy/kubernetes/
+        - kubectl apply -f ui-service.yml
 
 deploy_to_production:
     stage: deploy-to-prod
@@ -103,5 +105,6 @@ deploy_to_production:
     script:
         - cd /builds/Janortop5/capstone-microservices-demo-watchn/deploy/kubernetes/
         - ./deploy.sh
+        - kubectl apply -f ui-ingress.yml
 
 
