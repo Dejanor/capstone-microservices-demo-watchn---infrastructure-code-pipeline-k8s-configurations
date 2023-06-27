@@ -6,6 +6,8 @@ helm repo add grafana https://grafana.github.io/helm-charts
 
 helm repo update
 
+cd /builds/Janortop5/capstone-microservices-demo-watchn/deploy/kubernetes/
+
 helmfile apply
 
 kubectl config set-context --current --namespace default
@@ -16,10 +18,10 @@ helm install loki grafana/loki-stack --namespace loki --create-namespace --set g
 
 kubectl get secret --namespace loki loki-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 
-kubectl apply -f loki-ingress.yml
+cd /builds/Janortop5/capstone-microservices-demo-watchn/deploy/kubernetes/monitoring/
+
+kubectl apply -f assets-service-monitor.yml && kubectl apply -f catalog-service-monitor.yml && kubectl apply -f catalog-service-monitor.yml && kubectl apply -f orders-service-monitor.yml && kubectl apply -f carts-service-monitor.yml && kubectl apply -f checkout-service-monitor.yml && kubectl apply -f prometheus-grafana-service.yml && kubectl apply -f prometheus-service.yml
+
+cd /builds/Janortop5/capstone-microservices-demo-watchn/deploy/kubernetes/ingress/
 
 kubectl apply -f ui-ingress.yml
-
-kubectl apply -f carts-service-monitor.yml && kubectl apply -f catalogue-service-monitor.yml && kubectl apply -f front-end-service-monitor.yml && kubectl apply -f orders-service-monitor.yml && kubectl apply -f payment-service-monitor.yml && kubectl apply -f queue-master-service-monitor.yml && kubectl apply -f rabbitmq-service-monitor.yml && kubectl apply -f shipping-service-monitor.yml && kubectl apply -f user-service-monitor.yml
-
-kubectl apply -f prometheus-grafana-ingress.yml
