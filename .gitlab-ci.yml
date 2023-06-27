@@ -78,6 +78,7 @@ deploy_to_dev:
         - export KUBECONFIG=/builds/Janortop5/capstone-microservices-demo-watchn/capstone-deploy/terraform/config/configdev
     script:
         - cd /builds/Janortop5/capstone-microservices-demo-watchn/deploy/kubernetes/
+        - chmod +x deploy.sh
         - ./deploy.sh
         - cd /builds/Janortop5/capstone-microservices-demo-watchn/deploy/kubernetes/
         - kubectl apply -f ui-service.yml
@@ -104,6 +105,7 @@ deploy_to_production:
         - export KUBECONFIG=/builds/Janortop5/capstone-microservices-demo-watchn/capstone-deploy/terraform/config/configprod
     script:
         - cd /builds/Janortop5/capstone-microservices-demo-watchn/deploy/kubernetes/
+        - chmod +x deploy.sh
         - ./deploy.sh
         - kubectl apply -f ui-ingress.yml
 
