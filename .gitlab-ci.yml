@@ -107,6 +107,7 @@ deploy_to_production:
         - cd /builds/Janortop5/capstone-microservices-demo-watchn/deploy/kubernetes/
         - chmod +x deploy.sh
         - ./deploy.sh
+        - cd /builds/Janortop5/capstone-microservices-demo-watchn/deploy/kubernetes/ingress/
         - kubectl apply -f ui-ingress.yml
 
 
