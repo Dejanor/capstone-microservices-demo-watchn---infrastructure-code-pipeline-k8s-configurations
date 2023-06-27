@@ -23,5 +23,3 @@ cd /builds/Janortop5/capstone-microservices-demo-watchn/deploy/kubernetes/monito
 kubectl apply -f assets-service-monitor.yml && kubectl apply -f catalog-service-monitor.yml && kubectl apply -f catalog-service-monitor.yml && kubectl apply -f orders-service-monitor.yml && kubectl apply -f carts-service-monitor.yml && kubectl apply -f checkout-service-monitor.yml && kubectl apply -f prometheus-grafana-service.yml && kubectl apply -f prometheus-service.yml
 
 cd /builds/Janortop5/capstone-microservices-demo-watchn/deploy/kubernetes/ingress/
-
-kubectl apply -f ui-ingress.yml
