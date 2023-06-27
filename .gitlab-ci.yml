@@ -7,7 +7,6 @@ stages:
 infrastructure:
     stage: infrastructure
     image: zenika/terraform-aws-cli:release-6.0_terraform-1.3.7_awscli-1.27.60
-    when: manual
     before_script:
         - echo AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
         - echo AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
@@ -69,7 +68,6 @@ deploy_to_dev:
         - mkdir -p $HOME/bin && cp ./aws-iam-authenticator $HOME/bin/aws-iam-authenticator && export PATH=$PATH:$HOME/bin
         - echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc
         - aws-iam-authenticator help
-    script:
         - kubectl
         - helm
         - wget https://github.com/helmfile/helmfile/releases/download/v0.154.0/helmfile_0.154.0_linux_amd64.tar.gz
@@ -78,7 +76,9 @@ deploy_to_dev:
         - helmfile
         - helm plugin install https://github.com/databus23/helm-diff
         - export KUBECONFIG=/builds/Janortop5/capstone-microservices-demo-watchn/capstone-deploy/terraform/config/configdev
-        - kubectl get nodes
+    script:
+        - cd /builds/Janortop5/capstone-microservices-demo-watchn/deploy/kubernetes/
+        - ./deploy.sh
 
 deploy_to_production:
     stage: deploy-to-prod
@@ -92,8 +92,6 @@ deploy_to_production:
         - mkdir -p $HOME/bin && cp ./aws-iam-authenticator $HOME/bin/aws-iam-authenticator && export PATH=$PATH:$HOME/bin
         - echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc
         - aws-iam-authenticator help
-
-    script:
         - kubectl
         - helm
         - wget https://github.com/helmfile/helmfile/releases/download/v0.154.0/helmfile_0.154.0_linux_amd64.tar.gz
@@ -102,6 +100,8 @@ deploy_to_production:
         - helmfile
         - helm plugin install https://github.com/databus23/helm-diff
         - export KUBECONFIG=/builds/Janortop5/capstone-microservices-demo-watchn/capstone-deploy/terraform/config/configprod
-        - kubectl get nodes
+    script:
+        - cd /builds/Janortop5/capstone-microservices-demo-watchn/deploy/kubernetes/
+        - ./deploy.sh
 
 
