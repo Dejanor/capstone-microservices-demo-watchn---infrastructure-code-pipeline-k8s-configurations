@@ -6,7 +6,8 @@ stages:
 
 workflow:
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
 
 infrastructure:
     stage: infrastructure
@@ -15,6 +16,7 @@ infrastructure:
         - echo AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
         - echo AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
         - echo AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
+
     script:
         - cd capstone-deploy/terraform
         - terraform init
@@ -94,7 +96,6 @@ deploy_to_production:
     image:
         name: dtzar/helm-kubectl:latest
         entrypoint: ['']
-    when: manual
     rules:
         - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH 
     before_script:
