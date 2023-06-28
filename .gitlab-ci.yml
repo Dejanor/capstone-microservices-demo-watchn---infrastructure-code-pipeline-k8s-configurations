@@ -4,6 +4,11 @@ stages:
     - "deploy-to-dev"
     - "deploy-to-prod"
 
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+
 infrastructure:
     stage: infrastructure
     image: zenika/terraform-aws-cli:release-6.0_terraform-1.3.7_awscli-1.27.60
@@ -62,6 +67,8 @@ deploy_to_dev:
     image:
         name: dtzar/helm-kubectl:latest
         entrypoint: ['']
+    rules:
+        - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
     before_script:
         - curl -Lo aws-iam-authenticator https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/download/v0.5.9/aws-iam-authenticator_0.5.9_linux_amd64
         - chmod +x ./aws-iam-authenticator
@@ -89,6 +96,8 @@ deploy_to_production:
         name: dtzar/helm-kubectl:latest
         entrypoint: ['']
     when: manual
+    rules:
+        - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH 
     before_script:
         - curl -Lo aws-iam-authenticator https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/download/v0.5.9/aws-iam-authenticator_0.5.9_linux_amd64
         - chmod +x ./aws-iam-authenticator
