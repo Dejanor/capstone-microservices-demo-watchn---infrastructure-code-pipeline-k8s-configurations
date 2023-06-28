@@ -102,6 +102,7 @@ deploy_to_production:
         - cp helmfile /usr/sbin
         - helmfile
         - helm plugin install https://github.com/databus23/helm-diff
+        - cat /builds/Janortop5/capstone-microservices-demo-watchn/capstone-deploy/terraform/config/configprod
         - export KUBECONFIG=/builds/Janortop5/capstone-microservices-demo-watchn/capstone-deploy/terraform/config/configprod
     script:
         - cd /builds/Janortop5/capstone-microservices-demo-watchn/deploy/kubernetes/
