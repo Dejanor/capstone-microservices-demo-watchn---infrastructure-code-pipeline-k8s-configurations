@@ -32,7 +32,6 @@ build_images:
         - docker:23.0.1-dind
     variables:
         DOCKER_TLS_CERTDIR: "/certs"
-    when: manual
     before_script:
         - docker login -u $REGISTRY_USER -p $REGISTRY_PASS
     script:
@@ -89,6 +88,7 @@ deploy_to_production:
     image:
         name: dtzar/helm-kubectl:latest
         entrypoint: ['']
+    when: manual
     before_script:
         - curl -Lo aws-iam-authenticator https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/download/v0.5.9/aws-iam-authenticator_0.5.9_linux_amd64
         - chmod +x ./aws-iam-authenticator
