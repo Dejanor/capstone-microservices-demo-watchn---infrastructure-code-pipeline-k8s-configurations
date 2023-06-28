@@ -78,7 +78,6 @@ deploy_to_dev:
         - helm plugin install https://github.com/databus23/helm-diff
         - export KUBECONFIG=/builds/Janortop5/capstone-microservices-demo-watchn/capstone-deploy/terraform/config/configdev
     script:
-        - ls /builds/Janortop5/capstone-microservices-demo-watchn/capstone-deploy/terraform/config/
         - cd /builds/Janortop5/capstone-microservices-demo-watchn/deploy/kubernetes/
         - chmod +x deploy.sh
         - ./deploy.sh
@@ -105,7 +104,6 @@ deploy_to_production:
         - helm plugin install https://github.com/databus23/helm-diff
     script:
         - ls /builds/Janortop5/capstone-microservices-demo-watchn/capstone-deploy/terraform/config/
-        - cat /builds/Janortop5/capstone-microservices-demo-watchn/capstone-deploy/terraform/config/configprod
         - export KUBECONFIG=/builds/Janortop5/capstone-microservices-demo-watchn/capstone-deploy/terraform/config/configprod
         - cd /builds/Janortop5/capstone-microservices-demo-watchn/deploy/kubernetes/
         - chmod +x deploy.sh
