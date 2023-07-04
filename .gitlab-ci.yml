@@ -1,5 +1,6 @@
 stages:
     - "infrastructure"
+    - "test"
     - "build"
     - "deploy-to-dev"
     - "deploy-to-prod"
@@ -30,6 +31,18 @@ infrastructure:
       paths:
       - /builds/Janortop5/capstone-microservices-demo-watchn/capstone-deploy/terraform/config/
       expire_in: 1 week
+
+.run_tests:
+    stage: test
+    image: docker:23.0.1-cli
+    services:
+        - docker:23.0.1-dind
+    variables:
+        DOCKER_TLS_CERTDIR: "/certs"
+    script:
+        - cd src/e2e
+        - chmod +x ./scripts/run-docker.sh
+        - ./scripts/run-docker.sh 'http://endpoint:8080'
 
 build_images:
     stage: build
@@ -119,5 +132,9 @@ deploy_to_production:
         - ./deploy.sh
         - cd /builds/Janortop5/capstone-microservices-demo-watchn/deploy/kubernetes/ingress/
         - kubectl apply -f ui-ingress.yml
+        - chmod +x install-vpa.sh
+        - ./install-vpa.sh
+        - kubectl apply -f vpa-auto-mode.yml
+
 
 
