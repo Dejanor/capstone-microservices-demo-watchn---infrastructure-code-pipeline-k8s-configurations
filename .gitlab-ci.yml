@@ -34,7 +34,7 @@ workflow:
 
 run_tests:
     stage: test
-    image: ubuntu:22.04
+    image: ubuntu:20.04
     before_script:
         - apt-get update
         - apt-get install ca-certificates curl gnupg -y
