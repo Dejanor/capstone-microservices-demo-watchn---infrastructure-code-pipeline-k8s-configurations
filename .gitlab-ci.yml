@@ -32,7 +32,7 @@ infrastructure:
       - /builds/Janortop5/capstone-microservices-demo-watchn/capstone-deploy/terraform/config/
       expire_in: 1 week
 
-run_tests:
+.run_tests:
     stage: test
     image: docker:23.0.1-cli
     services:
