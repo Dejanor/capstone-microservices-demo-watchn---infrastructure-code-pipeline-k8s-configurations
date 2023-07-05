@@ -1,0 +1,15 @@
+docker build -t janortop5/watchn-ui:0.0.1 --build-arg JAR_PATH=target/ui-0.0.1-SNAPSHOT.jar .
+docker build -t janortop5/watchn-catalog:0.0.1 .
+docker build -t janortop5/watchn-carts:0.0.1 --build-arg JAR_PATH=target/carts-0.0.1-SNAPSHOT.jar .
+docker build -t janortop5/watchn-orders:0.0.1 --build-arg JAR_PATH=target/orders-0.0.1-SNAPSHOT.jar .
+docker build -t janortop5/watchn-checkout:0.0.1 .
+docker build -t janortop5/watchn-assets:0.0.1 .
+docker build -t janortop5/watchn-activemq:0.0.1 .
+docker push janortop5/watchn-ui:0.0.1
+docker push janortop5/watchn-catalog:0.0.1
+docker push janortop5/watchn-carts:0.0.1
+docker push janortop5/watchn-orders:0.0.1
+docker push janortop5/watchn-checkout:0.0.1
+docker push janortop5/watchn-assets:0.0.1
+docker push janortop5/watchn-activemq:0.0.1
+
