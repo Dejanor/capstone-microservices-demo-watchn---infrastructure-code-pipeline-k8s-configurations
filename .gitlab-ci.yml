@@ -100,10 +100,10 @@ deploy_to_dev:
         - helm plugin install https://github.com/databus23/helm-diff
         - export KUBECONFIG=/builds/Janortop5/capstone-microservices-demo-watchn/capstone-deploy/terraform/config/configdev
     script:
-        - cd /builds/Janortop5/capstone-microservices-demo-watchn/deploy/kubernetes/
+        - cd /builds/Janortop5/capstone-microservices-demo-watchn/capstone-deploy/kubernetes/
         - chmod +x deploy.sh
         - ./deploy.sh
-        - cd /builds/Janortop5/capstone-microservices-demo-watchn/deploy/kubernetes/
+        - cd /builds/Janortop5/capstone-microservices-demo-watchn/capstone-deploy/kubernetes/
         - kubectl apply -f ui-service.yml
 
 deploy_to_production:
@@ -129,10 +129,10 @@ deploy_to_production:
     script:
         - ls /builds/Janortop5/capstone-microservices-demo-watchn/capstone-deploy/terraform/config/
         - export KUBECONFIG=/builds/Janortop5/capstone-microservices-demo-watchn/capstone-deploy/terraform/config/configprod
-        - cd /builds/Janortop5/capstone-microservices-demo-watchn/deploy/kubernetes/
+        - cd /builds/Janortop5/capstone-microservices-demo-watchn/capstone-deploy/kubernetes/
         - chmod +x deploy.sh
         - ./deploy.sh
-        - cd /builds/Janortop5/capstone-microservices-demo-watchn/deploy/kubernetes/ingress/
+        - cd /builds/Janortop5/capstone-microservices-demo-watchn/capstone-deploy/kubernetes/ingress/
         - kubectl apply -f ui-ingress.yml
         - cd ..
         - chmod +x install-vpa.sh
