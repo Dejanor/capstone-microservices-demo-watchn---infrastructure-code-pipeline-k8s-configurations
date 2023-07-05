@@ -145,9 +145,8 @@ deploy_to_production:
         - cp helmfile /usr/sbin
         - helmfile
         - helm plugin install https://github.com/databus23/helm-diff
-    script:
-        - ls /builds/Janortop5/capstone-microservices-demo-watchn/capstone-deploy/terraform/config/
         - export KUBECONFIG=/builds/Janortop5/capstone-microservices-demo-watchn/capstone-deploy/terraform/config/configprod
+    script:
         - cd /builds/Janortop5/capstone-microservices-demo-watchn/capstone-deploy/kubernetes/
         - chmod +x deploy.sh
         - ./deploy.sh
@@ -157,6 +156,4 @@ deploy_to_production:
         - chmod +x install-vpa.sh
         - ./install-vpa.sh
         - kubectl apply -f vpa-auto-mode.yml
-
-
 
