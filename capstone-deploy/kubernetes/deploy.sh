@@ -18,6 +18,6 @@ helm install loki grafana/loki-stack --namespace loki --create-namespace --set g
 
 kubectl get secret --namespace loki loki-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 
-cd /builds/Janortop5/capstone-microservices-demo-watchn/deploy/kubernetes/monitoring/
+cd /builds/Janortop5/capstone-microservices-demo-watchn/capstone-deploy/kubernetes/monitoring/
 
 kubectl apply -f assets-service-monitor.yml && kubectl apply -f catalog-service-monitor.yml && kubectl apply -f catalog-service-monitor.yml && kubectl apply -f orders-service-monitor.yml && kubectl apply -f carts-service-monitor.yml && kubectl apply -f checkout-service-monitor.yml && kubectl apply -f prometheus-grafana-service.yml && kubectl apply -f prometheus-service.yml
