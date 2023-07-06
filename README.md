@@ -48,44 +48,44 @@ REGISTRY_USER       [variable.type: env_var]
 - uses **'dtzar/helm-kubectl:latest'** image to connect to cluster and use helm
 - has **'if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH'** rule which makes 'deploy-to-producuction' job to only run from master branch
 - has a 'before_script' which installs aws-iam-authenticator, helmfile and helm-diff plugin on job container
-- has 'script' which deploys to producuctionuction environment
+- has 'script' which deploys to production environment
 ## What pipeline does
 **stage 'infrastructure':** 
-- contains the infrastructure job
-- deploys and sets up cluster with terraform
-- creates artifacts for credentials to connect to cluster in later jobs
-- contains the get_cluster_credentials job which is to only get the cluster credentials from terraform after cluster has been created 
+- contains the **infrastructure job**
+- **deploys** and **sets up cluster** with terraform
+- creates **artifacts** for **credentials** to **connect** to cluster in later jobs
+- contains the **get_cluster_credentials job** which is to only get the **cluster credentials** from terraform **after cluster** has been **created** 
 ![infrastructure job](./capstone-deploy/screenshots/infrastructure-job.png)
 ![get_cluster_credentials job](./capstone-deploy/screenshots/get-cluster-credentials-job.png)
 
 
 **stage 'test':**
-- contains the "run_tests" job
-- it builds the images for the source codes and tests the application before the build stage (the tests provided by the stagingelopers for the application failed, hence why it was skipped in the pipeline)
+- contains the **"run_tests"** job
+- it **builds** the **images** for the source codes **and tests** the **application** before the build stage (the tests provided by the stagingelopers for the application failed, hence why it was skipped in the pipeline)
 ![run_tests job](./capstone-deploy/screenshots/run_tests-job.png)
 
 **stage 'build':**
-- contains the "build_images" job
-- builds the images for the various microservices (ui, catalog, carts, orders, checkout, assets, activemq) and pushes to dockerhub account
+- contains the **"build_images"** job
+- **builds** the **images** for the **various microservices** (ui, catalog, carts, orders, checkout, assets, activemq) and pushes to dockerhub account
 ![build job](./capstone-deploy/screenshots/build-images-job.png)
 
 **stage 'deploy-to-staging':** 
-- contains the "deploy-to-staging" job
-- deploys watchn, prometheus and loki to staging environment cluster before producuctionuction
+- contains the **"deploy-to-staging" job**
+- deploys **watchn, prometheus** and **loki to staging** environment cluster before production
 ![deploy-to-staging job](./capstone-deploy/screenshots/deploy-to-staging-job.png)
 
 **stage 'deploy':**
-- contains the "deploy-to-producuction" job
-- deploys watchn, prometheus and loki to producuctionuction
+- contains the **"deploy-to-producuction"** job
+- deploys **watchn, prometheus** and **loki to production**
 ![deploy-to-producuction job](./capstone-deploy/screenshots/deploy-to-producuction-job.png)
 
 ## Infrastructure
 #### ./capstone-deploy/terraform
-- creates 2 eks cluster and 2 eks node group, one for staging and one for producuctionuction, in private subnets with only 443 ingress rule
-- sets remote backend as s3 bucket
-- creates hosted zone
-- creates nginx-ingress-controller for both kubernetes clusters and calls it's Load Balancer data back into configuration to attach to a wildcard hosted zone record
-- adds hosted zone nameservers to namedotcom domain using terraform namedotcom provider
+- creates **2 eks cluster** and **2 eks node group,** one for **staging** and one for **production,** in private subnets with only 443 ingress rule
+- sets **remote backend** as s3 bucket
+- creates **hosted zone**
+- creates **nginx-ingress-controller** for both kubernetes clusters and calls it's Load Balancer data back into configuration to attach to a **wildcard hosted zone record**
+- adds hosted zone **nameservers** to namedotcom domain using terraform **namedotcom provider**
 ## configuration
 #### ./deploy/kubernetes
 - deploys watchn application using **helmfile, helm charts** and **helm-diff plugin**
