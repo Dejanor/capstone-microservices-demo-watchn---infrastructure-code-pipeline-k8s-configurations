@@ -1,118 +1,75 @@
-# Watchn - Microservices Demo
+# Capstone Project - Deploy Watchn
 
-Watchn is a project that provides a demo for illustrating various concepts related to the development and deployment of applications that are made up of distributed, decoupled components. Like projects that inspired is such as Hipster Shop and Sock Shop it is deliberately over-architected to provide a foundation for truely exploring more complex techniques and technologies.
+### Watchn Application
+Link to Application repo: https://github.com/niallthomson/microservices-demo
 
-![Screenshot](/docs/images/screenshot.png)
+### prerequisites for project
+- aws account
+- iam user with administrator access
+- domain
+- dockerhub account
+- gitlab account
 
-It looks to explore:
-- Frameworks and programming models for developing decoupled, stateless service components in multiple languages
-- Aggregation techniques such as API gateways
-- Leveraging heterogenous persistence across different services (relational, NoSQL)
-- Using scalable persistence techniques such as splitting write/read endpoints
-- Implementing cross-cutting concerns such as authentication, monitoring, logging and tracing
-- Packaging with containers leveraging "best practices" (re-use, security, size optimization)
-- Provisioning infrastructure via IaC
-- Mechanisms for building out complex CI/CD pipelines
-- Working with a monorepo model
-
-These facets will be gradually worked through over time, and none of them are guaranteed to be in place at any given time.
-
-There are several high level implementation themes that are used throughout this repository:
-- Nothing is coupled to a single deployment mechanism or orchestrator
-- REST APIs are generally used and documented through the OpenAPI specification
-- Events that each service publishes are documented with JSONSchema
-- Services should avoid making synchronous calls to each other where possible
-- Container setup designed to work with both x64 and ARM64 CPU architecture
-
-## Application Architecture
-
-The application has been deliberately over-engineered to generate multiple de-coupled components. These components generally have different infrastructure dependencies, and may support multiple "backends" (example: Carts service supports MongoDB or DynamoDB).
-
-![Architecture](/docs/images/architecture.png)
-
-| Component | Language | Dependencies        | Description                                                                 |
-|-----------|----------|---------------------|-----------------------------------------------------------------------------|
-| UI        | Java     | None                | Aggregates API calls to the various other services and renders the HTML UI. |
-| Catalog   | Go       | MySQL               | Product catalog API                                                         |
-| Carts     | Java     | MongoDB or DynamoDB | User shopping carts API                                                     |
-| Orders    | Java     | MySQL               | User orders API                                                             |
-| Checkout  | Node     | Redis               | API to orchestrate the checkout process                                     |
-| Assets    | Nginx    |                     | Serves static assets like images related to the product catalog             |
-
-
-## Quickstart
-
-The following sections provide quickstart instructions for various platforms. All of these assume that you have cloned this repository locally and are using a CLI thats current directory is the root of the code repository.
-
+### prerequisites for pipeline
+- remote backend for terraform state — a sample file to create s3 backend available in ./capstone-deploy/terraform/remote.tf
+- namedotcom token
+- create the following variables in gitlab:
 ```
-git clone https://github.com/niallthomson/microservices-demo.git
-
-cd microservices-demo
+AWS_ACCESS_KEY_ID   [variable.type: env_var]
+AWS_CREDENTIALS     [variable.type: env_var]
+AWS_DEFAULT_REGION  [variable.type: env_var]
+REGISTRY_PASS       [variable.type: env_var]
+REGISTRY_USER       [variable.type: env_var]
 ```
+![gitlab variables](./capstone-deploy/screenshots/gitlab-variables.png)
 
-### Minikube
+## Breakdown
+#### stage: infrastructure
+- uses 'zenika/terraform-aws-cli:release-6.0_terraform-1.3.7_awscli-1.27.60' image to connect to aws and run terraform configuration
+- takes in the following variables in the 'before_script' argument: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION
+- script argument runs terraform configuration
+- creates artifacts
+#### stage: test
+- uses 'docker:23.0.1-cli' image and it's 'docker:23.0.1-dind' service 
+- takes in variable: DOCKER_TLS_CERTDIR: "/certs"
+- has a before_script argument to install bash
+- 'script' runs the test script
+#### stage: build
+- 
+#### stage: deploy-to-dev
+- contains the "deploy-to-dev" job
+- deploys watchn, prometheus and loki to dev environment cluster before production
+![deploy-to-dev job](./capstone-deploy/screenshots/deploy-to-dev-job.png)
+#### stage: deploy-to-prod
+- contains the "deploy-to-prod" job
+- deploys watchn, prometheus and loki to production
+![deploy-to-prod job](./capstone-deploy/screenshots/deploy-to-prod-job.png)
+#### How pipeline works
+**stage 'infrastructure':** 
+- contains the infrastructure job
+- deploys and sets up cluster with terraform
+- creates artifacts for credentials to connect to cluster in later jobs
+- contains the get_cluster_credentials job which is to only get the cluster credentials from terraform after cluster has been created 
+![infrastructure job](./capstone-deploy/screenshots/infrastructure-job.png)
+![get_cluster_credentials job](./capstone-deploy/screenshots/get-cluster-credentials-job.png)
 
-This deployment method will run the application on your local machine using `minikube`, and will reference pre-built container images by default.
 
-Pre-requisites:
-- Minikube installed locally
-- Helm and Helmfile utilities installed
+**stage 'test':**
+- contains the "run_tests" job
+- it builds the images for the source codes and tests the application before the build stage (the tests provided by the developers for the application failed, hence why it was skipped in the pipeline)
+![run_tests job](./capstone-deploy/screenshots/run_tests-job.png)
 
-To run the application on Minikube we'll need at least 2Gb of memory for the cluster:
+**stage 'build':**
+- contains the "build_images" job
+- builds the images for the various microservices (ui, catalog, carts, orders, checkout, assets, activemq) and pushes to dockerhub account
+![build job](./capstone-deploy/screenshots/build-images-job.png)
 
+- **stage 'deploy':** 
 ```
-minikube start --memory=2g
+- setup Gitlab runner with the following Binary:
+  • terraform
+  • aws cli 
+  • aws-iam-authenticator
+  • helm
+- deploys terraform configuration and kubernetes manifests
 ```
-
-Change directory to the Kubernetes deploy directory:
-
-```
-cd deploy/kubernetes
-```
-
-Use `helmfile` to install all of the components via their Helm charts:
-
-```
-NODE_PORT=1 helmfile apply
-```
-
-Open the frontend in a browser window:
-
-```
-minikube service -n watchn ui
-```
-
-### Docker Compose
-
-This deployment method will run the application on your local machine using `docker-compose`, and will build the containers as part of the deployment.
-
-Pre-requisites:
-- Docker and Docker Compose installed locally
-
-Change directory to the Docker Compose deploy directory:
-
-```
-cd deploy/docker-compose
-```
-
-Use `docker-compose` to run the application containers:
-
-```
-docker-compose up
-```
-
-Open the frontend in a browser window:
-
-```
-http://localhost
-```
-
-### Cloud Environments
-
-Terraform configuration is provided for various cloud providers:
-
-| Name | Description | Link |
-|------|-------------|------|
-| AWS EKS | Kubernetes-based deployment on AWS Elastic Kubernetes Service | [Docs](/deploy/terraform/eks-single-region/README.md) |
-| AWS ECS | Deploys to AWS Elastic Container Service | [Docs](/deploy/terraform/ecs-single-region/README.md) |
-| GKE | Kubernetes-based deployment on Google Kubernetes Engine | TODO |
