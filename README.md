@@ -88,7 +88,7 @@ REGISTRY_USER       [variable.type: env_var]
 - adds hosted zone **nameservers** to namedotcom domain using terraform **namedotcom provider**
 ## configuration
 #### ./deploy/kubernetes
-- deploys watchn application using **helmfile, helm charts** and **helm-diff plugin**
+- deploys **watchn** application using **helmfile, helm charts** and **helm-diff plugin**
 #### ./capstone-deploy/kubernetes
 - **'./ingress/loki-ingress.yml'** - ingress configuration for loki (logging)
 - **'./ingress/prometheus-grafana-ingress.yml'** - ingress configuration for prometheus grafana ui
