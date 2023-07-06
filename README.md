@@ -61,7 +61,7 @@ REGISTRY_USER       [variable.type: env_var]
 
 **stage 'test':**
 - contains the **"run_tests"** job
-- it **builds** the **images** for the source codes **and tests** the **application** before the build stage (the tests provided by the stagingelopers for the application failed, hence why it was skipped in the pipeline)
+- it **builds** the **images** for the source codes **and tests** the **application** before the build stage (the tests provided by the developers for the application failed, hence why it was skipped in the pipeline)
 ![run_tests job](./capstone-deploy/screenshots/run_tests-job.png)
 
 **stage 'build':**
