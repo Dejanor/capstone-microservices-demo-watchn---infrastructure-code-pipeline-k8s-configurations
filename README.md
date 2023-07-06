@@ -90,18 +90,22 @@ REGISTRY_USER       [variable.type: env_var]
 #### ./deploy/kubernetes
 - deploys watchn application using **helmfile, helm charts** and **helm-diff plugin**
 #### ./capstone-deploy/kubernetes
-- **'./ingress/ui-ingress.yml'**- ingress configuration for ui
 - **'./ingress/loki-ingress.yml'** - ingress configuration for loki (logging)
 - **'./ingress/prometheus-grafana-ingress.yml'** - ingress configuration for prometheus grafana ui
-- **'./ingress/assets-service-monitor.yml'** - service monitor configuration for assets microservices, prometheus now able to see and scrape metrics
-- **'./ingress/carts-service-monitor.yml'** - service monitor configuration for carts microservices, prometheus now able 
-- **'./ingress/catalog-service-monitor.yml'** - service monitor configuration for catalog microservices, prometheus now able 
-- **'./ingress/checkout-service-monitor.yml'** - service monitor configuration for checkout microservices, prometheus now able 
-- **'./ingress/orders-service-monitor.yml'** - service monitor configuration for orders microservices, prometheus now able
-- **'./ingress/ui-service-monitor.yml'** - service monitor configuration for ui microservices, prometheus now able
+- **'./monitoring/assets-service-monitor.yml'** - service monitor configuration for assets microservices, prometheus now able to see and scrape metrics
+- **'./monitoring/carts-service-monitor.yml'** - service monitor configuration for carts microservices, prometheus now able 
+- **'./monitoring/catalog-service-monitor.yml'** - service monitor configuration for catalog microservices, prometheus now able 
+- **'./monitoring/checkout-service-monitor.yml'** - service monitor configuration for checkout microservices, prometheus now able 
+- **'./monitoring/orders-service-monitor.yml'** - service monitor configuration for orders microservices, prometheus now able
+- **'./monitoring/ui-service-monitor.yml'** - service monitor configuration for ui microservices, prometheus now able
 prometheus-grafana-service.yml - 
-- **'./ingress/prometheus-service.yml'** - service configuration for prometheus deployment
-- **'./ingress/prometheus-grafana-service.yml'** - Load Balancer service configuration for prometheus grafana ui service
+- **'./monitoring/prometheus-service.yml'** - service configuration for prometheus deployment
+- **'./monitoring/prometheus-grafana-service.yml'** - Load Balancer service configuration for prometheus grafana ui service
+- **'deploy.sh'** - script to deploy all the configurations on both staging and production clusters
+- **'ui-service.yml'** - Load Balancer service configuration for watchn ui service
+- **'./ingress/ui-ingress.yml'**- ingress configuration for watchn ui 
+- **'install-vpa.sh'** - script to install Vertical Pod Autoscaler (VPA) on cluster
+- **'vpa-auto-mode.yml'** - configuration to set 'updateMode: auto' for VPA
 ## Steps to recreate
 - get a **namedotcom** domain and create an api token
 - get an **aws account** and create an **IAM user **with **enough permissions** preferable administratoraccess
@@ -113,8 +117,15 @@ prometheus-grafana-service.yml -
 - replace the **domain name,** and **namedotcom username** and **token** in the **"./capstone-deploy/terraform/variables.tf"** file
 - run pipeline
 ## Security
-
+- hid sensitive keys and credentials using gitlab variables
+- set dev branch pipeline to deploy only to staging environment
+- merge request from dev branch to master branch needs approval from project owner
+- pipeline to production only runs from master branch
+- set appropriate permissions for the different users according to their role
+- clusters in private subnets with only 443 ingress rule
 ## Autoscaling
+- making use of Vertical Pod Autoscaler to scale kubernetes cluster accoring to historical resource usage measurements
+- Add more CPU and Memory to pods by adjusting the resource requests and limits for pods
 
 
 
