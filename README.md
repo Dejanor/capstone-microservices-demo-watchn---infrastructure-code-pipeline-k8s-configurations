@@ -124,7 +124,7 @@ prometheus-grafana-service.yml -
 - set appropriate permissions for the different users according to their role
 - clusters in private subnets with only 443 ingress rule
 ## Autoscaling
-- making use of Vertical Pod Autoscaler to scale kubernetes cluster according to historical resource usage measurements
+- making use of **Vertical Pod Autoscaler (VPA)** to scale kubernetes cluster according to historical resource usage measurements
 - Adds more CPU and Memory to pods by adjusting the resource requests and limits for pods
 
 
