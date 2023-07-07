@@ -79,6 +79,9 @@ REGISTRY_USER       [variable.type: env_var]
 - deploys **watchn, prometheus** and **loki to production**
 ![deploy-to-producuction job](./capstone-deploy/screenshots/deploy-to-producuction-job.png)
 
+#### Pipeline Architecture Diagram
+![pipeline architecture diagram](./capstone-deploy/screenshots/Capstone-CICD-Pipeline-architecture-diagram.png)
+
 ## Infrastructure
 #### ./capstone-deploy/terraform
 - creates **2 eks cluster** and **2 eks node group,** one for **staging** and one for **production,** in private subnets with only 443 ingress rule
@@ -86,6 +89,8 @@ REGISTRY_USER       [variable.type: env_var]
 - creates **hosted zone**
 - creates **nginx-ingress-controller** for both kubernetes clusters and calls it's Load Balancer data back into configuration to attach to a **wildcard hosted zone record**
 - adds hosted zone **nameservers** to namedotcom domain using terraform **namedotcom provider**
+#### Infrastructure Architecture Diagram
+![pipeline architecture diagram](./capstone-deploy/screenshots/Capstone-aws-architecture-diagram.png)
 ## configuration
 #### ./deploy/kubernetes
 - deploys **watchn** application using **helmfile, helm charts** and **helm-diff plugin**
@@ -126,7 +131,10 @@ prometheus-grafana-service.yml -
 ## Autoscaling
 - making use of **Vertical Pod Autoscaler (VPA)** to scale kubernetes cluster according to historical resource usage measurements
 - Adds more CPU and Memory to pods by adjusting the resource requests and limits for pods
-
+## Watchn app ui
+![Watchn app ui](./capstone-deploy/screenshots/watchn-app-ui.png)
+## prometheus monitoring and metrics
+## loki logging
 
 
 
