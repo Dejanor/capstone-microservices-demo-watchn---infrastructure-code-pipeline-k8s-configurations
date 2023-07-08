@@ -1,5 +1,3 @@
-export DEBIAN_FRONTEND=noninteractive
-
 apt-get update && apt-get install -y gnupg software-properties-common wget curl gpg
 
 wget -O- https://apt.releases.hashicorp.com/gpg | \
@@ -39,3 +37,7 @@ apt-get install helm
 helm repo add stable https://charts.helm.sh/stable
 
 helm repo update
+
+helm
+
+terraform
