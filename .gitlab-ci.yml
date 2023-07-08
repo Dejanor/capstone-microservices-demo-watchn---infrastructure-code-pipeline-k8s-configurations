@@ -38,6 +38,8 @@ get_cluster_credentials:
         - echo AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
         - echo AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
         - echo AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
+        - helm repo add stable https://charts.helm.sh/stable
+        - helm repo update
     script:
         - cd capstone-deploy/terraform
         - terraform init
