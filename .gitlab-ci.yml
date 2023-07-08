@@ -10,7 +10,7 @@ workflow:
     - if: '$CI_PIPELINE_SOURCE == "web"'
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
 
-infrastructure:
+.infrastructure:
     stage: infrastructure
     image: ubuntu:focal
     before_script:
@@ -38,7 +38,7 @@ infrastructure:
       - /builds/Janortop5/capstone-microservices-demo-watchn/capstone-deploy/terraform/config/
       expire_in: 1 week
 
-.get_cluster_credentials:
+get_cluster_credentials:
     stage: infrastructure
     image: zenika/terraform-aws-cli:release-6.0_terraform-1.3.7_awscli-1.27.60
     before_script:
