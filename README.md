@@ -1,118 +1,149 @@
-# Watchn - Microservices Demo
+# Capstone Project - Deploy Watchn
 
-Watchn is a project that provides a demo for illustrating various concepts related to the development and deployment of applications that are made up of distributed, decoupled components. Like projects that inspired is such as Hipster Shop and Sock Shop it is deliberately over-architected to provide a foundation for truely exploring more complex techniques and technologies.
+### Watchn Application
+Link to Application repo: https://github.com/niallthomson/microservices-demo
 
-![Screenshot](/docs/images/screenshot.png)
+### prerequisites for project
+- aws account
+- iam user with administrator access
+- domain
+- dockerhub account
+- gitlab account
 
-It looks to explore:
-- Frameworks and programming models for developing decoupled, stateless service components in multiple languages
-- Aggregation techniques such as API gateways
-- Leveraging heterogenous persistence across different services (relational, NoSQL)
-- Using scalable persistence techniques such as splitting write/read endpoints
-- Implementing cross-cutting concerns such as authentication, monitoring, logging and tracing
-- Packaging with containers leveraging "best practices" (re-use, security, size optimization)
-- Provisioning infrastructure via IaC
-- Mechanisms for building out complex CI/CD pipelines
-- Working with a monorepo model
-
-These facets will be gradually worked through over time, and none of them are guaranteed to be in place at any given time.
-
-There are several high level implementation themes that are used throughout this repository:
-- Nothing is coupled to a single deployment mechanism or orchestrator
-- REST APIs are generally used and documented through the OpenAPI specification
-- Events that each service publishes are documented with JSONSchema
-- Services should avoid making synchronous calls to each other where possible
-- Container setup designed to work with both x64 and ARM64 CPU architecture
-
-## Application Architecture
-
-The application has been deliberately over-engineered to generate multiple de-coupled components. These components generally have different infrastructure dependencies, and may support multiple "backends" (example: Carts service supports MongoDB or DynamoDB).
-
-![Architecture](/docs/images/architecture.png)
-
-| Component | Language | Dependencies        | Description                                                                 |
-|-----------|----------|---------------------|-----------------------------------------------------------------------------|
-| UI        | Java     | None                | Aggregates API calls to the various other services and renders the HTML UI. |
-| Catalog   | Go       | MySQL               | Product catalog API                                                         |
-| Carts     | Java     | MongoDB or DynamoDB | User shopping carts API                                                     |
-| Orders    | Java     | MySQL               | User orders API                                                             |
-| Checkout  | Node     | Redis               | API to orchestrate the checkout process                                     |
-| Assets    | Nginx    |                     | Serves static assets like images related to the product catalog             |
-
-
-## Quickstart
-
-The following sections provide quickstart instructions for various platforms. All of these assume that you have cloned this repository locally and are using a CLI thats current directory is the root of the code repository.
-
+### prerequisites for pipeline
+- remote backend for terraform state — a sample file to create s3 backend available in ./capstone-deploy/terraform/remote.tf
+- namedotcom token
+- create the following variables in gitlab:
 ```
-git clone https://github.com/niallthomson/microservices-demo.git
-
-cd microservices-demo
+AWS_ACCESS_KEY_ID   [variable.type: env_var]
+AWS_CREDENTIALS     [variable.type: env_var]
+AWS_DEFAULT_REGION  [variable.type: env_var]
+REGISTRY_PASS       [variable.type: env_var]
+REGISTRY_USER       [variable.type: env_var]
 ```
+![gitlab variables](./capstone-deploy/screenshots/gitlab-variables.png)
 
-### Minikube
+## Breakdown
+#### stage: infrastructure
+- uses **'zenika/terraform-aws-cli:release-6.0_terraform-1.3.7_awscli-1.27.60'** image to connect to aws and run terraform configuration
+- takes in the following variables in the 'before_script' argument: **AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION**
+- script argument runs terraform configuration
+- creates **artifacts**
+#### stage: test
+- uses **'docker:23.0.1-cli'** image and it's **'docker:23.0.1-dind'** service 
+- takes in variable: **DOCKER_TLS_CERTDIR: "/certs"**
+- has a before_script argument to install bash
+- 'script' runs the test script
+#### stage: build
+- uses **'docker:23.0.1-cli'** image and it's **'docker:23.0.1-dind'** service 
+- takes in variable: **DOCKER_TLS_CERTDIR: "/certs"**
+- has a 'before_script' to login to dockerhub
+- has 'script' that builds and pushes images to dockerhub
+#### stage: deploy-to-staging
+- uses **'dtzar/helm-kubectl:latest'** image to connect to cluster and use helm
+- has **'if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH'** rule which makes 'deploy-to-staging' job to only run from staging branch
+- has a 'before_script' which installs **aws-iam-authenticator, helmfile and helm-diff plugin** on job container
+- has 'script' which deploys to staging environment
+#### stage: deploy-to-producuction
+- uses **'dtzar/helm-kubectl:latest'** image to connect to cluster and use helm
+- has **'if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH'** rule which makes 'deploy-to-producuction' job to only run from master branch
+- has a 'before_script' which installs aws-iam-authenticator, helmfile and helm-diff plugin on job container
+- has 'script' which deploys to production environment
+## What pipeline does
+#### stage 'infrastructure':
+- contains the **infrastructure job**
+- **deploys** and **sets up cluster** with terraform
+- creates **artifacts** for **credentials** to **connect** to cluster in later jobs
+- contains the **get_cluster_credentials job** which is to only get the **cluster credentials** from terraform **after cluster** has been **created** 
+![infrastructure job](./capstone-deploy/screenshots/infrastructure-job.png)
+![get_cluster_credentials job](./capstone-deploy/screenshots/get-cluster-credentials-job.png)
 
-This deployment method will run the application on your local machine using `minikube`, and will reference pre-built container images by default.
 
-Pre-requisites:
-- Minikube installed locally
-- Helm and Helmfile utilities installed
+#### stage 'test':
+- contains the **"run_tests"** job
+- it **builds** the **images** for the source codes **and tests** the **application** before the build stage (the tests provided by the developers for the application failed, hence why it was skipped in the pipeline)
+![run_tests job](./capstone-deploy/screenshots/run_tests-job.png)
 
-To run the application on Minikube we'll need at least 2Gb of memory for the cluster:
+#### stage 'build':
+- contains the **"build_images"** job
+- **builds** the **images** for the **various microservices** (ui, catalog, carts, orders, checkout, assets, activemq) and pushes to dockerhub account
+![build job](./capstone-deploy/screenshots/build-images-job.png)
 
-```
-minikube start --memory=2g
-```
+#### stage 'deploy-to-staging':
+- contains the **"deploy-to-staging" job**
+- deploys **watchn, prometheus** and **loki to staging** environment cluster before production
+![deploy-to-staging job](./capstone-deploy/screenshots/deploy-to-staging-job.png)
 
-Change directory to the Kubernetes deploy directory:
+#### stage 'deploy-to-production':
+- contains the **"deploy-to-producuction"** job
+- deploys **watchn, prometheus** and **loki to production**
+![deploy-to-producuction job](./capstone-deploy/screenshots/deploy-to-producuction-job.png)
 
-```
-cd deploy/kubernetes
-```
+#### Pipeline Architecture Diagram
+![pipeline architecture diagram](./capstone-deploy/screenshots/Capstone-CICD-Pipeline-architecture-diagram.png)
 
-Use `helmfile` to install all of the components via their Helm charts:
+## Infrastructure
+#### ./capstone-deploy/terraform
+- creates **2 eks cluster** and **2 eks node group,** one for **staging** and one for **production,** in private subnets with only 443 ingress rule
+- sets **remote backend** as s3 bucket
+- creates **hosted zone**
+- creates **nginx-ingress-controller** for both kubernetes clusters and calls it's Load Balancer data back into configuration to attach to a **wildcard hosted zone record**
+- adds hosted zone **nameservers** to namedotcom domain using terraform **namedotcom provider**
+#### Infrastructure Architecture Diagram
+![pipeline architecture diagram](./capstone-deploy/screenshots/Capstone-aws-architecture-diagram.png)
+## configuration
+#### ./deploy/kubernetes
+- deploys **watchn** application using **helmfile, helm charts** and **helm-diff plugin**
+#### ./capstone-deploy/kubernetes
+- **'./ingress/loki-ingress.yml'** - ingress configuration for loki (logging)
+- **'./ingress/prometheus-grafana-ingress.yml'** - ingress configuration for prometheus grafana ui
+- **'./monitoring/assets-service-monitor.yml'** - service monitor configuration for assets microservices, prometheus now able to see and scrape metrics
+- **'./monitoring/carts-service-monitor.yml'** - service monitor configuration for carts microservices, prometheus now able 
+- **'./monitoring/catalog-service-monitor.yml'** - service monitor configuration for catalog microservices, prometheus now able 
+- **'./monitoring/checkout-service-monitor.yml'** - service monitor configuration for checkout microservices, prometheus now able 
+- **'./monitoring/orders-service-monitor.yml'** - service monitor configuration for orders microservices, prometheus now able
+- **'./monitoring/ui-service-monitor.yml'** - service monitor configuration for ui microservices, prometheus now able
+prometheus-grafana-service.yml - 
+- **'./monitoring/prometheus-service.yml'** - service configuration for prometheus deployment
+- **'./monitoring/prometheus-grafana-service.yml'** - Load Balancer service configuration for prometheus grafana ui service
+- **'deploy.sh'** - script to deploy all the configurations on both staging and production clusters
+- **'ui-service.yml'** - Load Balancer service configuration for watchn ui service
+- **'./ingress/ui-ingress.yml'**- ingress configuration for watchn ui 
+- **'install-vpa.sh'** - script to install Vertical Pod Autoscaler (VPA) on cluster
+- **'vpa-auto-mode.yml'** - configuration to set 'updateMode: auto' for VPA
+## Steps to recreate
+- get a **namedotcom** domain and create an api token
+- get an **aws account** and create an **IAM user **with **enough permissions** preferable administratoraccess
+- get a **dockerhub account** with its **username** and **password** as **"REGISTRY_USER"** and **"REGISTRY_PASS"** variables respectfully created in **Settings > CICD > Variables** 
+- isolate **'./capstone-deploy/terraform/remote.tf'** along with **'./capstone-deploy/terraform/providers.tf'** and **'./capstone-deploy/terraform/variables.tf'** from the rest of the terraform configuration
+- create a remote backend using the **'./capstone-deploy/terraform/remote.tf'** configuration (delete the terraform state after if the separated terraform configurations are returned to the same directory)
+- import repo to gitlab as a **CICD project**
+- create all the variables listed above in "prerequisites for pipeline" section
+- replace the **domain name,** and **namedotcom username** and **token** in the **"./capstone-deploy/terraform/variables.tf"** file
+- run pipeline
+## Security
+- hid sensitive keys and credentials using gitlab variables
+- set dev branch pipeline to deploy only to staging environment
+- merge request from dev branch to master branch needs approval from project owner
+- pipeline to production only runs from master branch
+- set appropriate permissions for the different users according to their role
+- clusters in private subnets with only 443 ingress rule
+## Autoscaling
+- making use of **Vertical Pod Autoscaler (VPA)** to scale kubernetes cluster according to historical resource usage measurements
+- Adds more CPU and Memory to pods by adjusting the resource requests and limits for pods
+## Watchn app ui
+![Watchn app ui](./capstone-deploy/screenshots/watchn-app-ui.png)
+## prometheus monitoring and metrics
+## loki logging
 
-```
-NODE_PORT=1 helmfile apply
-```
 
-Open the frontend in a browser window:
 
-```
-minikube service -n watchn ui
-```
 
-### Docker Compose
 
-This deployment method will run the application on your local machine using `docker-compose`, and will build the containers as part of the deployment.
 
-Pre-requisites:
-- Docker and Docker Compose installed locally
 
-Change directory to the Docker Compose deploy directory:
 
-```
-cd deploy/docker-compose
-```
 
-Use `docker-compose` to run the application containers:
 
-```
-docker-compose up
-```
 
-Open the frontend in a browser window:
 
-```
-http://localhost
-```
-
-### Cloud Environments
-
-Terraform configuration is provided for various cloud providers:
-
-| Name | Description | Link |
-|------|-------------|------|
-| AWS EKS | Kubernetes-based deployment on AWS Elastic Kubernetes Service | [Docs](/deploy/terraform/eks-single-region/README.md) |
-| AWS ECS | Deploys to AWS Elastic Container Service | [Docs](/deploy/terraform/ecs-single-region/README.md) |
-| GKE | Kubernetes-based deployment on Google Kubernetes Engine | TODO |

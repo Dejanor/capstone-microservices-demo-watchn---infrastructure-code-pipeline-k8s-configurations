@@ -1,7 +1,7 @@
 git clone --branch v1.0.0 https://github.com/nonai/k8s-example-files.git
 kubectl apply -f k8s-example-files/metrics-server/.
 kubectl get pods -n kube-system
-sleep 10
+sleep 20
 kubectl get apiservice |grep -i metrics
 kubectl get svc -n kube-system
 kubectl top pods -n kube-system
