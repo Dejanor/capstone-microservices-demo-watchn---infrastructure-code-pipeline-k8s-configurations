@@ -72,7 +72,7 @@ get_cluster_credentials:
         - chmod +x ./scripts/run-docker.sh
         - ./scripts/run-docker.sh 'http://endpoint:8080'
 
-build_images:
+.build_images:
     stage: build
     image: docker:23.0.1-cli
     services:
