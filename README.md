@@ -25,8 +25,9 @@ REGISTRY_USER       [variable.type: env_var]
 
 ## Breakdown
 #### stage: infrastructure
-- uses **'zenika/terraform-aws-cli:release-6.0_terraform-1.3.7_awscli-1.27.60'** image to connect to aws and run terraform configuration
-- takes in the following variables in the 'before_script' argument: **AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION**
+- uses **'ubuntu:focal'** image as base image
+- installs the necessary dependencies and binary/executable files (terraform, aws-cli, helm) to connect to aws and run terraform configuration
+- takes in the following variables in the 'before_script': **AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION**
 - script argument runs terraform configuration
 - creates **artifacts**
 #### stage: test
@@ -134,7 +135,12 @@ prometheus-grafana-service.yml -
 ## Watchn app ui
 ![Watchn app ui](./capstone-deploy/screenshots/watchn-app-ui.png)
 ## prometheus monitoring and metrics
+![prometheus grafana screenshot 1](./capstone-deploy/screenshots/prometheus-grafana-1.png)
+![prometheus grafana screenshot 2](./capstone-deploy/screenshots/prometheus-grafana-2.png)
+![prometheus grafana screenshot 3](./capstone-deploy/screenshots/prometheus-grafana-3.png)
 ## loki logging
+![loki logging ui - watchn namespace](./capstone-deploy/screenshots/loki-logging-watchn.png)
+
 
 
 
