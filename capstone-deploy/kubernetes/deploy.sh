@@ -21,3 +21,7 @@ kubectl get secret --namespace loki loki-grafana -o jsonpath="{.data.admin-passw
 cd /builds/Janortop5/capstone-microservices-demo-watchn/capstone-deploy/kubernetes/monitoring/
 
 kubectl apply -f assets-service-monitor.yml && kubectl apply -f catalog-service-monitor.yml && kubectl apply -f catalog-service-monitor.yml && kubectl apply -f orders-service-monitor.yml && kubectl apply -f carts-service-monitor.yml && kubectl apply -f checkout-service-monitor.yml && kubectl apply -f prometheus-grafana-service.yml && kubectl apply -f prometheus-service.yml
+
+cd /builds/Janortop5/capstone-microservices-demo-watchn/capstone-deploy/kubernetes/
+
+kubectl apply -f loki-service.yml
