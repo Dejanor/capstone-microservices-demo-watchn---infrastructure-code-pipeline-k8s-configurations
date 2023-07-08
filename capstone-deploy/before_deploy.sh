@@ -1,3 +1,5 @@
+export DEBIAN_FRONTEND=noninteractive
+
 apt-get update && apt-get install -y gnupg software-properties-common wget curl gpg
 
 apt install unzip
