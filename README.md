@@ -25,8 +25,9 @@ REGISTRY_USER       [variable.type: env_var]
 
 ## Breakdown
 #### stage: infrastructure
-- uses **'zenika/terraform-aws-cli:release-6.0_terraform-1.3.7_awscli-1.27.60'** image to connect to aws and run terraform configuration
-- takes in the following variables in the 'before_script' argument: **AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION**
+- uses **'ubuntu:focal'** image as base image
+- installs the necessary dependencies and binary/executable files (terraform, aws-cli, helm) to connect to aws and run terraform configuration
+- takes in the following variables in the 'before_script': **AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION**
 - script argument runs terraform configuration
 - creates **artifacts**
 #### stage: test
